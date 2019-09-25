@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:Weather.MobileCore.Converters"
+             mc:Ignorable="d"
+             xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
+             x:Class="Weather.MobileCore.CityListPage">
+
+    <ContentPage.BindingContext>
+        <vm:MultiWeatherViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid BackgroundColor="#1d1d1d">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+
+        <Label Text="World Cities"
+               FontSize="24"
+               TextColor="#f1f1f1"
+               Margin="20"
+               HorizontalOptions="Center"
+               />
+        
+        <CarouselView PeekAreaInsets="30"
+                      Position="2"
+                      ItemsSource="{Binding Cities}"
+                    Grid.Row="1">
+            <!--<CarouselView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Whatever</x:String>
+                    <x:String>Whoever</x:String>
+                </x:Array>
+            </CarouselView.ItemsSource>-->
+            <CarouselView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"/>
+            </CarouselView.ItemsLayout>
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid 
+                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
+
+                        <Label 
+                            Margin="15"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333"
+                            VerticalOptions="End"
+                            HorizontalOptions="Start"
+                            Text="{Binding Name}"/>
+
+                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
+                               FontSize="44"
+                               HorizontalOptions="End"
+                               VerticalOptions="Start"
+                               Margin="15"
+                               FontAttributes="Bold"
+                               TextColor="#333333"/>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <CollectionView 
+                    Grid.Row="2"
+                    ItemsSource="{Binding Cities}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" 
+                                   SnapPointsAlignment="Start" 
+                                   SnapPointsType="MandatorySingle"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid WidthRequest="410"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
+
+                        <Label 
+                            Margin="15"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333"
+                            VerticalOptions="End"
+                            HorizontalOptions="Start"
+                            Text="{Binding Name}"/>
+
+                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
+                               FontSize="44"
+                               HorizontalOptions="End"
+                               VerticalOptions="Start"
+                               Margin="15"
+                               FontAttributes="Bold"
+                               TextColor="#333333"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton 
+                    Source="{StaticResource IconMenu}" 
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Margin="15,25,0,0"
+                    BackgroundColor="Transparent" 
+                    Command="{Binding OpenFlyoutCommand}"/>
+
+    </Grid>
+
+</ContentPage>
