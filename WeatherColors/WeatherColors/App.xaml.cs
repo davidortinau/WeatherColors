@@ -11,7 +11,7 @@ namespace WeatherColors
         {
             InitializeComponent();
 
-            MainPage = new CityListPage();
+            MainPage = new AppShell();
         }
 
         protected override void OnStart()

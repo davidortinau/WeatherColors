@@ -5,6 +5,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:converters="clr-namespace:Weather.MobileCore.Converters"
              mc:Ignorable="d"
+             Shell.NavBarIsVisible="False"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+             ios:Page.UseSafeArea="True"
+             
+             BackgroundColor="#1d1d1d"
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
              x:Class="Weather.MobileCore.CityListPage">
 
@@ -12,7 +17,7 @@
         <vm:MultiWeatherViewModel/>
     </ContentPage.BindingContext>
 
-    <Grid BackgroundColor="#1d1d1d">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
@@ -30,14 +35,9 @@
                       Position="2"
                       ItemsSource="{Binding Cities}"
                     Grid.Row="1">
-            <!--<CarouselView.ItemsSource>
-                <x:Array Type="{x:Type x:String}">
-                    <x:String>Whatever</x:String>
-                    <x:String>Whoever</x:String>
-                </x:Array>
-            </CarouselView.ItemsSource>-->
             <CarouselView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal"/>
+                <LinearItemsLayout Orientation="Horizontal"
+                                   ItemSpacing="8"/>
             </CarouselView.ItemsLayout>
             <CarouselView.ItemTemplate>
                 <DataTemplate>

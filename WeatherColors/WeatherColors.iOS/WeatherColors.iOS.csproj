@@ -126,8 +126,11 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\WeatherColors\WeatherColors.csproj">
-      <Project>{47B8B9C7-50A8-4692-B314-8D498AD7309A}</Project>
+      <Project>{AB788D3A-2CC6-4B43-B448-B466108BACA7}</Project>
       <Name>WeatherColors</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\fa-solid-900.ttf" />
   </ItemGroup>
 </Project>
