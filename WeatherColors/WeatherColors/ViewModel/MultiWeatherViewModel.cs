@@ -19,8 +19,9 @@ namespace Weather.MobileCore.ViewModel
         private WeatherForecastRoot _forecast;
         private ICommand _reloadCommand;
         private ICommand _openFlyoutCommand;
+        private ICommand _navToOtherPage;
 
-        
+
         public int Temp
         {
             get { return _temp; }
@@ -87,6 +88,15 @@ namespace Weather.MobileCore.ViewModel
             _openFlyoutCommand ??
             (_openFlyoutCommand = new Command(() => OpenFlyout()));
 
+        public ICommand NavigateToOtherPage =>
+            _navToOtherPage ??
+            (_navToOtherPage = new Command(() => GoToOther()));
+
+        private void GoToOther()
+        {
+            Shell.Current.GoToAsync("//anything");
+        }
+
         private void OpenFlyout()
         {
             Shell.Current.FlyoutIsPresented = true;
@@ -104,6 +114,7 @@ namespace Weather.MobileCore.ViewModel
         }
 
         List<Continent> _continents;
+        
         public List<Continent> Continents
         {
             get { return _continents; }

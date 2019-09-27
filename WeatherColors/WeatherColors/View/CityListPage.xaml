@@ -110,6 +110,14 @@
                     BackgroundColor="Transparent" 
                     Command="{Binding OpenFlyoutCommand}"/>
 
+        <ImageButton 
+                    Source="{StaticResource IconMenu}" 
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    Margin="15,25,0,0"
+                    BackgroundColor="Transparent" 
+                    Command="{Binding NavigateToOtherPage}"/>
+
     </Grid>
 
 </ContentPage>
