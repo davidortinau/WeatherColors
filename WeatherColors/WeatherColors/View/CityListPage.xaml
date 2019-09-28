@@ -8,7 +8,7 @@
              Shell.NavBarIsVisible="False"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.UseSafeArea="True"
-             
+             xmlns:views="clr-namespace:WeatherColors.View"
              BackgroundColor="#1d1d1d"
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
              x:Class="Weather.MobileCore.CityListPage">
@@ -34,35 +34,13 @@
         <CarouselView PeekAreaInsets="30"
                       Position="2"
                       ItemsSource="{Binding Cities}"
+                      ItemTemplate="{DataTemplate views:CityBoxTemplate}"
                     Grid.Row="1">
             <CarouselView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal"
                                    ItemSpacing="8"/>
             </CarouselView.ItemsLayout>
-            <CarouselView.ItemTemplate>
-                <DataTemplate>
-                    <Grid 
-                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
-
-                        <Label 
-                            Margin="15"
-                            FontSize="18"
-                            FontAttributes="Bold"
-                            TextColor="#333333"
-                            VerticalOptions="End"
-                            HorizontalOptions="Start"
-                            Text="{Binding Name}"/>
-
-                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
-                               FontSize="44"
-                               HorizontalOptions="End"
-                               VerticalOptions="Start"
-                               Margin="15"
-                               FontAttributes="Bold"
-                               TextColor="#333333"/>
-                    </Grid>
-                </DataTemplate>
-            </CarouselView.ItemTemplate>
+            
         </CarouselView>
 
         <CollectionView 
