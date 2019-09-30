@@ -25,14 +25,10 @@ namespace WeatherApp.Services
         public static List<string> NORTH_AMERICA_CITIES = new List<string>() {
             "3530597", // Mexico City
             "5128581", // New York
-            "5368361", // Los Angeles
             "6167865", // Toronto
             "4887398", // Chicago
-            "4699066", // Houston
             "3553478", // Havana
             "6077243", // Montreal
-            "3529612", // 
-            "4560349" // Philadelphia
         };
         
         public static List<string> SOUTH_AMERICA_CITIES = new List<string>()
@@ -43,13 +39,50 @@ namespace WeatherApp.Services
             "3451190", // "Rio de Janeiro",
             "1687801", // "Santiago",
             "3646738", // "Caracas",
-            "3435910", // "Buenos Aires",
-            "3450554", // "Salvador",
-            "3459342", // "Brasilia",
-            "6320062" // "Fortaleza"
 
         };
-        
+
+        public static List<string> AFRICA_CITIES = new List<string>()
+        {
+            "360630", // "Cairo",
+            "2332459", // "Lagos",
+            "2314302", // "Kinshasa-Brazzaville",
+            "993800", // "Johannesburg",
+            "2240449", // "Luanda",
+        };
+
+        public static List<string> EUROPE_CITIES = new List<string>()
+        {
+            "2756429", // "Ede"
+            "745044", // "Istanbul",
+            "524901", // "Moscow",
+            "2643743", // "London",
+            "498817", // "Saint Petersburg",
+            "2950159", // "Berlin",
+        };
+
+        public static List<string> ASIA_CITIES = new List<string>()
+        {
+            "1273294", // "Delhi"
+            "1850147", // "Tokyo",
+            "25200", // "Jakarta",
+            "1275339", // "Mumbai",
+            "1835848", // "Seoul",
+        };
+
+        public static List<string> AUSTRALIA_CITIES = new List<string>()
+        {
+            "2147714", // "Sydney"
+            "2158177", // "Melbourne",
+            "2174003", // "Brisbane",
+            "2063523", // "Perth",
+            "2078025", // "Adelaide",
+        };
+
+        public static List<string> ANTARCTICA_CITIES = new List<string>()
+        {
+        };
+
         private static WeatherService _instance;
 
         public static WeatherService Instance
@@ -68,7 +101,7 @@ namespace WeatherApp.Services
             using (var client = new HttpClient())
             {
                 var url = string.Format(WeatherCoordinatesUri, latitude, longitude, units.ToString().ToLower());
-                var json = await client.GetStringAsync(url);
+                var json = await client.GetStringAsync(url).ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(json))
                     return null;
@@ -84,7 +117,7 @@ namespace WeatherApp.Services
             {
                 var url = string.Format(WeatherCityUri, HttpUtility.UrlEncode(city), units.ToString().ToLower());
                 Debug.WriteLine(url);
-                var json = await client.GetStringAsync(url);
+                var json = await client.GetStringAsync(url).ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(json))
                     return null;
@@ -99,7 +132,7 @@ namespace WeatherApp.Services
             using (var client = new HttpClient())
             {
                 var url = string.Format(ForecaseUri, id, units.ToString().ToLower());
-                var json = await client.GetStringAsync(url);
+                var json = await client.GetStringAsync(url).ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(json))
                     return null;
@@ -114,7 +147,7 @@ namespace WeatherApp.Services
             using (var client = new HttpClient())
             {
                 var url = string.Format(WeatherCitiesUri, string.Join(",",cities), units.ToString().ToLower());
-                var json = await client.GetStringAsync(url);
+                var json = await client.GetStringAsync(url).ConfigureAwait(false);
 
                 if (string.IsNullOrWhiteSpace(json))
                     return null;

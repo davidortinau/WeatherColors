@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Remove="Model\DataItem.cs" />
     <Compile Remove="Model\OpenWeatherModels.cs" />
+    <Compile Remove="View\IndicatorView.cs" />
   </ItemGroup>
 
   <ItemGroup>

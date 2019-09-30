@@ -92,6 +92,10 @@ namespace Weather.MobileCore.ViewModel
             _navToOtherPage ??
             (_navToOtherPage = new Command(() => GoToOther()));
 
+        public ICommand ContinentSelectedCommand =>
+            _continentSelectedCommand ??
+            (_continentSelectedCommand = new Command<Continent>((e) => SetCities(e)));
+
         private void GoToOther()
         {
             Shell.Current.GoToAsync("//anything");
@@ -102,7 +106,10 @@ namespace Weather.MobileCore.ViewModel
             Shell.Current.FlyoutIsPresented = true;
         }
 
-        ObservableCollection<City> _cities; 
+        //List<string> Continents { get; set; }
+        //    = new List<string> { "North America", "South America", "Africa", "Europe", "Asia", "Australia" };
+
+        ObservableCollection<City> _cities = new ObservableCollection<City>(); 
         public ObservableCollection<City> Cities
         {
             get { return _cities; }
@@ -113,9 +120,10 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        List<Continent> _continents;
-        
-        public List<Continent> Continents
+        ObservableCollection<Continent> _continents = new ObservableCollection<Continent>();
+        private ICommand _continentSelectedCommand;
+
+        public ObservableCollection<Continent> Continents
         {
             get { return _continents; }
             set
@@ -156,10 +164,12 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        public async Task GetFlatWeatherAsync(List<string> cities)
+        public async Task<ObservableCollection<City>> GetWeatherForCitiesAsync(List<string> cities)
         {
-            if (IsBusy)
-                return;
+            //if (IsBusy)
+            //    return null;
+
+            ObservableCollection<City> c = null;
 
             IsBusy = true;
             try
@@ -168,17 +178,18 @@ namespace Weather.MobileCore.ViewModel
                 var units = useCelsius ? Units.Metric : Units.Imperial;
                 payload = await WeatherService.Instance.GetWeatherAsync(cities, units); 
 
-                Cities = new ObservableCollection<City>( payload.CityList );
+                c = new ObservableCollection<City>( payload.CityList );
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
             }
             finally
             {
-                IsBusy = false;
+                IsBusy = false;    
             }
+
+            return c;
         }
 
         public async Task GetGroupedWeatherAsync()
@@ -189,33 +200,62 @@ namespace Weather.MobileCore.ViewModel
             IsBusy = true;
             try
             {
-                List<string> allCities = WeatherService.NORTH_AMERICA_CITIES.Concat(WeatherService.SOUTH_AMERICA_CITIES).ToList<string>();
-                
-                Debug.WriteLine(allCities.Count());
-                
-                //await GetFlatWeatherAsync(allCities);
-                CitiesWeatherRoot payload = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                payload = await WeatherService.Instance.GetWeatherAsync(allCities, units);
+                _continents.Add(
+                    new Continent(
+                        name: "Europe",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES)
+                    )
+                );
 
-                _cities = new ObservableCollection<City>( payload.CityList );
+                _continents.Add(
+                    new Continent(
+                        name: "North America",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES)
+                    )
+                );
 
-                //_continents = new List<Continent>();
-                //_continents.Add(
-                //    new Continent(name:"North America", cities: GetCitiesIn(_cities, WeatherService.NORTH_AMERICA_CITIES))                    
-                //);
+                _continents.Add(
+                    new Continent(
+                        name: "South America",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES)
+                    )
+                );
 
-                //_continents.Add(
-                //    new Continent(name:"South America", cities: GetCitiesIn(_cities, WeatherService.SOUTH_AMERICA_CITIES))
-                //);
+                _continents.Add(
+                    new Continent(
+                        name: "Africa",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES)
+                    )
+                );
 
-                //OnPropertyChanged(nameof(Continents));
-                OnPropertyChanged(nameof(Cities));
+                _continents.Add(
+                    new Continent(
+                        name: "Asia",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES)
+                    )
+                );
+
+                _continents.Add(
+                    new Continent(
+                        name: "Australia",
+                        cities: await GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES)
+                    )
+                );
+
+                _continents.Add(
+                    new Continent(
+                        name: "Antarctica",
+                        cities: null
+                    )
+                );
+
+                OnPropertyChanged(nameof(Continents));
+
+                SetCities(_continents[0]);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
             }
             finally
             {
@@ -223,7 +263,18 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        private List<City> GetCitiesIn(List<City> cities, List<string> cityIds)
+        private void SetCities(Continent continent)
+        {
+            _cities.Clear();
+            foreach(var c in continent)
+            {
+                _cities.Add(c);
+            }
+
+            OnPropertyChanged(nameof(Cities));
+        }
+
+        private List<City> GetCitiesIn(ObservableCollection<City> cities, List<string> cityIds)
         {
             return cities.Where(x => cityIds.Contains(x.Id.ToString())).ToList();
         }

@@ -8,7 +8,6 @@
              Shell.NavBarIsVisible="False"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.UseSafeArea="True"
-             
              BackgroundColor="#1d1d1d"
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
              x:Class="Weather.MobileCore.CityListPage">
@@ -21,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
@@ -31,14 +31,11 @@
                HorizontalOptions="Center"
                />
         
-        <CarouselView PeekAreaInsets="30"
-                      Position="2"
-                      ItemsSource="{Binding Cities}"
+        <CarouselView
+            x:Name="CitiesCarousel"
+            PositionChanged="OnPositionChanged"
+            ItemsSource="{Binding Cities}"
                     Grid.Row="1">
-            <CarouselView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal"
-                                   ItemSpacing="8"/>
-            </CarouselView.ItemsLayout>
             <CarouselView.ItemTemplate>
                 <DataTemplate>
                     <Grid 
@@ -65,9 +62,76 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
+        <CollectionView x:Name="IndicatorView"
+                        Grid.Row="2"
+                        Margin="0,5"
+                        HorizontalOptions="Center"
+                        SelectionMode="Single"
+                        SelectionChanged="IndicatorSelectionChanged"
+                        ItemsSource="{Binding Cities}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"
+                                   ItemSpacing="8"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid BackgroundColor="White"
+                          HeightRequest="10"
+                          WidthRequest="30"
+                          VerticalOptions="Start"
+                          HorizontalOptions="Start">
+                        <!--<Grid.GestureRecognizers>
+                            <TapGestureRecognizer
+                                
+                                Tapped="OnIndicatorTapped"/>
+                        </Grid.GestureRecognizers>-->
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.Resources>
+                <Style TargetType="Grid">
+                    <Setter Property="VisualStateManager.VisualStateGroups">
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                                Value="LightSkyBlue" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter>
+                </Style>
+            </CollectionView.Resources>
+        </CollectionView>
+
         <CollectionView 
-                    Grid.Row="2"
-                    ItemsSource="{Binding Cities}">
+                    Grid.Row="3"
+                    SelectionMode="Single"
+                    x:Name="ContinentCV"
+                    SelectionChangedCommand="{Binding ContinentSelectedCommand}"
+                    SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference ContinentCV}}"
+                    ItemsSource="{Binding Continents}">
+            <CollectionView.Resources>
+                <Style TargetType="Grid">
+                    <Setter Property="VisualStateManager.VisualStateGroups">
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                                Value="LightSkyBlue" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter>
+                </Style>
+            </CollectionView.Resources>
+
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" 
                                    SnapPointsAlignment="Start" 
@@ -79,8 +143,7 @@
                     <Grid WidthRequest="410"
                         HorizontalOptions="Fill"
                         VerticalOptions="Fill"
-                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
-
+                        BackgroundColor="#d1d1d1">
                         <Label 
                             Margin="15"
                             FontSize="18"
@@ -89,14 +152,6 @@
                             VerticalOptions="End"
                             HorizontalOptions="Start"
                             Text="{Binding Name}"/>
-
-                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
-                               FontSize="44"
-                               HorizontalOptions="End"
-                               VerticalOptions="Start"
-                               Margin="15"
-                               FontAttributes="Bold"
-                               TextColor="#333333"/>
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -110,13 +165,6 @@
                     BackgroundColor="Transparent" 
                     Command="{Binding OpenFlyoutCommand}"/>
 
-        <ImageButton 
-                    Source="{StaticResource IconMenu}" 
-                    HorizontalOptions="End"
-                    VerticalOptions="Start"
-                    Margin="15,25,0,0"
-                    BackgroundColor="Transparent" 
-                    Command="{Binding NavigateToOtherPage}"/>
 
     </Grid>
 
