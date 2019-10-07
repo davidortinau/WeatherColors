@@ -39,19 +39,17 @@
 		<string>fa-solid-900.ttf</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSExceptionDomains</key>
-    <dict>
-        <key>api.openweathermap.org</key>
-        <dict>
-            <!--Include to allow subdomains-->
-            <key>NSIncludesSubdomains</key>
-            <true/>
-            <!--Include to allow HTTP requests-->
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-        </dict>
-    </dict>
-</dict>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>api.openweathermap.org</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 </dict>
 </plist>

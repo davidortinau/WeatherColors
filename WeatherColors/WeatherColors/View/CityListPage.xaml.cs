@@ -17,7 +17,7 @@ namespace Weather.MobileCore
         {
             base.OnAppearing();
 
-            _ =(BindingContext as MultiWeatherViewModel).GetGroupedWeatherAsync();
+            //_ = (BindingContext as MultiWeatherViewModel).GetGroupedWeatherAsync();
         }
 
         public void OnPositionChanged(object sender, PositionChangedEventArgs args)
