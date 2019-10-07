@@ -142,7 +142,7 @@ namespace WeatherApp.Services
 
         }
 
-        public async Task<CitiesWeatherRoot> GetWeatherAsync(List<string> cities, Units units = Units.Imperial)
+        public async Task<CitiesWeatherRoot> GetWeatherAsync(IEnumerable<string> cities, Units units = Units.Imperial)
         {
             using (var client = new HttpClient())
             {
