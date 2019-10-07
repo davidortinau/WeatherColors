@@ -21,6 +21,13 @@ namespace Weather.MobileCore.ViewModel
         private ICommand _openFlyoutCommand;
         private ICommand _navToOtherPage;
 
+        public MultiWeatherViewModel() : base()
+        {
+            Task.Run(async () =>
+            {
+                await GetGroupedWeatherAsync().ConfigureAwait(false);
+            });
+        }
 
         public int Temp
         {
@@ -112,7 +119,9 @@ namespace Weather.MobileCore.ViewModel
         ObservableCollection<City> _cities = new ObservableCollection<City>(); 
         public ObservableCollection<City> Cities
         {
-            get { return _cities; }
+            get
+            {
+                return _cities; }
             set
             {
                 _cities = value;
@@ -200,58 +209,81 @@ namespace Weather.MobileCore.ViewModel
             IsBusy = true;
             try
             {
-                _continents.Add(
-                    new Continent(
-                        name: "Europe",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES)
-                    )
-                );
+                var euCities = GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES);
+                var naCities = GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES);
+                var saCities = GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES);
+                var afCities = GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES);
+                var asCities = GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES);
+                var auCities = GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES);
 
-                _continents.Add(
-                    new Continent(
-                        name: "North America",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES)
-                    )
-                );
+                List<Task> tasks = new List<Task>
+                {
+                    euCities,
+                    naCities,
+                    saCities,
+                    afCities,
+                    asCities,
+                    auCities
+                };
 
-                _continents.Add(
-                    new Continent(
-                        name: "South America",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES)
-                    )
-                );
+                Task.WaitAll(tasks.ToArray());
 
-                _continents.Add(
-                    new Continent(
-                        name: "Africa",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES)
-                    )
-                );
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    _continents.Add(
+                        new Continent(
+                            name: "Europe",
+                            cities: euCities.Result
+                        )
+                    );
 
-                _continents.Add(
-                    new Continent(
-                        name: "Asia",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES)
-                    )
-                );
+                    _continents.Add(
+                        new Continent(
+                            name: "North America",
+                            cities: naCities.Result
+                        )
+                    );
 
-                _continents.Add(
-                    new Continent(
-                        name: "Australia",
-                        cities: await GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES)
-                    )
-                );
+                    _continents.Add(
+                        new Continent(
+                            name: "South America",
+                            cities: saCities.Result
+                        )
+                    );
 
-                _continents.Add(
-                    new Continent(
-                        name: "Antarctica",
-                        cities: null
-                    )
-                );
+                    _continents.Add(
+                        new Continent(
+                            name: "Africa",
+                            cities: afCities.Result
+                        )
+                    );
 
-                OnPropertyChanged(nameof(Continents));
+                    _continents.Add(
+                        new Continent(
+                            name: "Asia",
+                            cities: asCities.Result
+                        )
+                    );
 
-                SetCities(_continents[0]);
+                    _continents.Add(
+                        new Continent(
+                            name: "Australia",
+                            cities: auCities.Result
+                        )
+                    );
+
+                    //_continents.Add(
+                    //    new Continent(
+                    //        name: "Antarctica",
+                    //        cities: null
+                    //    )
+                    //);
+                    OnPropertyChanged(nameof(Continents));
+
+                    SetCities(_continents[0]);
+                });
+
+                
             }
             catch (Exception ex)
             {
