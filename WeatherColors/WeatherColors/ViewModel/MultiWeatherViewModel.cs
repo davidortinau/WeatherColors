@@ -14,13 +14,10 @@ namespace Weather.MobileCore.ViewModel
 {
     public class MultiWeatherViewModel : BaseViewModel
     {
-        private int _temp = 73;
-        private string _condition;
         private WeatherForecastRoot _forecast;
         private ICommand _reloadCommand;
         private ICommand _openFlyoutCommand;
-        private ICommand _navToOtherPage;
-
+        
         public MultiWeatherViewModel() : base()
         {
             Task.Run(async () =>
@@ -28,27 +25,7 @@ namespace Weather.MobileCore.ViewModel
                 await GetGroupedWeatherAsync().ConfigureAwait(false);
             });
         }
-
-        public int Temp
-        {
-            get { return _temp; }
-            set
-            {
-                _temp = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Condition
-        {
-            get { return _condition; }
-            set
-            {
-                _condition = value;
-                OnPropertyChanged();
-            }
-        }
-
+        
         public WeatherForecastRoot Forecast
         {
             get { return _forecast; }
@@ -59,62 +36,22 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        bool useCelsius;
-        public bool UseCelsius
-        {
-            get => useCelsius;
-            set
-            {
-                if (SetProperty(ref useCelsius, value))
-                {
-                    //BackgroundColorConverter.UseCelcius = UseCelsius;
-                    OnPropertyChanged(nameof(Temp));
-                }
-            }
-        }
-
-        string location = "St. Louis";
-        public string Location
-        {
-            get => location;
-            set
-            {
-                if (SetProperty(ref location, value))
-                {
-                    _ = GetWeatherAsync();
-                }
-            }
-        }
-
-
         public ICommand ReloadCommand =>
             _reloadCommand ??
-            (_reloadCommand = new Command(async () => await GetWeatherAsync()));
+            (_reloadCommand = new Command(async () => await GetGroupedWeatherAsync().ConfigureAwait(false)));
 
         public ICommand OpenFlyoutCommand =>
             _openFlyoutCommand ??
             (_openFlyoutCommand = new Command(() => OpenFlyout()));
-
-        public ICommand NavigateToOtherPage =>
-            _navToOtherPage ??
-            (_navToOtherPage = new Command(() => GoToOther()));
-
+        
         public ICommand ContinentSelectedCommand =>
             _continentSelectedCommand ??
             (_continentSelectedCommand = new Command<Continent>((e) => SetCities(e)));
-
-        private void GoToOther()
-        {
-            Shell.Current.GoToAsync("//anything");
-        }
 
         private void OpenFlyout()
         {
             Shell.Current.FlyoutIsPresented = true;
         }
-
-        //List<string> Continents { get; set; }
-        //    = new List<string> { "North America", "South America", "Africa", "Europe", "Asia", "Australia" };
 
         ObservableCollection<City> _cities = new ObservableCollection<City>(); 
         public ObservableCollection<City> Cities
@@ -142,37 +79,6 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        public string CurrentConditionsIcon { get; set; }
-
-        public async Task GetWeatherAsync()
-        {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-            try
-            {
-                WeatherRoot weatherRoot = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                weatherRoot = await WeatherService.Instance.GetWeatherAsync(location.Trim(), units);
-                //Forecast = await WeatherService.Instance.GetForecast(weatherRoot.CityId, units);
-                var unit = useCelsius ? "C" : "F";
-                //Temp = $"{weatherRoot?.MainWeather?.Temperature ?? 0}°{unit}";
-                Temp = Convert.ToInt32(weatherRoot?.MainWeather?.Temperature);
-                Condition = $"{weatherRoot.Name}: {weatherRoot?.Weather?[0]?.Description ?? string.Empty}";
-                CurrentConditionsIcon = weatherRoot?.Weather?[0].Icon;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
         public async Task<ObservableCollection<City>> GetWeatherForCitiesAsync(List<string> cities)
         {
             //if (IsBusy)
@@ -184,8 +90,8 @@ namespace Weather.MobileCore.ViewModel
             try
             {
                 CitiesWeatherRoot payload = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                payload = await WeatherService.Instance.GetWeatherAsync(cities, units); 
+                var units = Units.Imperial;
+                payload = await WeatherService.Instance.GetWeatherAsync(cities, units).ConfigureAwait(false); 
 
                 c = new ObservableCollection<City>( payload.CityList );
             }
