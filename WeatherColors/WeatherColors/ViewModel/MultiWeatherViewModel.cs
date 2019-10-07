@@ -121,10 +121,14 @@ namespace Weather.MobileCore.ViewModel
                     asiaWeather
                 };
 
-                Continents.Clear();
-                Continents.AddRange(weatherList);
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Continents.Clear();
+                    Continents.AddRange(weatherList);
 
-                SetCities(weatherList.First());
+                    SetCities(weatherList.First());
+                });
+                
             }
             catch (Exception ex)
             {
