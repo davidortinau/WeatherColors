@@ -3,7 +3,7 @@ using WeatherApp.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Weather.MobileCore
+namespace WeatherColors.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CityListPage : ContentPage
@@ -12,14 +12,7 @@ namespace Weather.MobileCore
         {
             InitializeComponent();
         }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            //_ = (BindingContext as MultiWeatherViewModel).GetGroupedWeatherAsync();
-        }
-
+        
         public void OnPositionChanged(object sender, PositionChangedEventArgs args)
         {
             
@@ -32,7 +25,8 @@ namespace Weather.MobileCore
         public void IndicatorSelectionChanged(object sender, SelectionChangedEventArgs args)
         {
             CitiesCarousel.PositionChanged -= OnPositionChanged;
-            CitiesCarousel.Position = (BindingContext as MultiWeatherViewModel).Cities.IndexOf(args.CurrentSelection[0] as City);
+            var pos = (BindingContext as MultiWeatherViewModel).Cities.IndexOf(args.CurrentSelection[0] as City);
+            CitiesCarousel.ScrollTo(pos, animate: false);
             CitiesCarousel.PositionChanged += OnPositionChanged;
         }
 

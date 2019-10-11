@@ -1,18 +1,21 @@
-﻿using MvvmHelpers;
+﻿//using MvvmHelpers;
+using AsyncAwaitBestPractices;
 using AsyncAwaitBestPractices.MVVM;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WeatherApp.Models;
 using WeatherApp.Services;
+using WeatherColors;
 using Xamarin.Forms;
 
 namespace Weather.MobileCore.ViewModel
 {
-    public class MultiWeatherViewModel : BaseViewModel
+    public class MultiWeatherViewModel : MvvmHelpers.BaseViewModel
     {
         private WeatherForecastRoot _forecast;
         private ICommand _reloadCommand;
@@ -111,7 +114,8 @@ namespace Weather.MobileCore.ViewModel
                                         name: "Asia",
                                         cities: await asCitiesTask.ConfigureAwait(false));
 
-                var weatherList = new List<Continent>
+
+                var weatherList = new[]
                 {
                     europeWeather,
                     northAmericaWeather,
@@ -124,11 +128,17 @@ namespace Weather.MobileCore.ViewModel
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     Continents.Clear();
+                    //Continents.Add(europeWeather);
+                    //Continents.Add(northAmericaWeather);
+                    //Continents.Add(southAmericaWeather);
+                    //Continents.Add(africaWeather);
+                    //Continents.Add(australiaWeather);
+                    //Continents.Add(asiaWeather);
                     Continents.AddRange(weatherList);
-
                     SetCities(weatherList.First());
+                    //SetCities(europeWeather);
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -148,7 +158,11 @@ namespace Weather.MobileCore.ViewModel
         private void SetCities(Continent e)
         {
             Cities.Clear();
-            Cities.AddRange(e.Cities);
+            Cities.AddRange(e.ToArray());
+            //foreach(var c in e.Cities)
+            //{
+            //    Cities.Add(c);
+            //}
         }
     }
 }
