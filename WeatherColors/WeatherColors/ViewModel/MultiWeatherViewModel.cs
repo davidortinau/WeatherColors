@@ -3,6 +3,7 @@ using AsyncAwaitBestPractices;
 using AsyncAwaitBestPractices.MVVM;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -113,7 +114,7 @@ namespace Weather.MobileCore.ViewModel
                                         name: "Asia",
                                         cities: await asCitiesTask.ConfigureAwait(false));
 
-                
+
                 var weatherList = new[]
                 {
                     europeWeather,
@@ -127,8 +128,15 @@ namespace Weather.MobileCore.ViewModel
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     Continents.Clear();
+                    //Continents.Add(europeWeather);
+                    //Continents.Add(northAmericaWeather);
+                    //Continents.Add(southAmericaWeather);
+                    //Continents.Add(africaWeather);
+                    //Continents.Add(australiaWeather);
+                    //Continents.Add(asiaWeather);
                     Continents.AddRange(weatherList);
                     SetCities(weatherList.First());
+                    //SetCities(europeWeather);
                 });
 
             }
@@ -150,7 +158,11 @@ namespace Weather.MobileCore.ViewModel
         private void SetCities(Continent e)
         {
             Cities.Clear();
-            Cities.AddRange(e.Cities);
+            Cities.AddRange(e.ToArray());
+            //foreach(var c in e.Cities)
+            //{
+            //    Cities.Add(c);
+            //}
         }
     }
 }

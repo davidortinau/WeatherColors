@@ -166,16 +166,17 @@ namespace WeatherApp.Models
         public Main CurrentWeather { get; set; }    
     }
     
-    public class Continent
+    public class Continent : ObservableCollection<City>
     {
         public string Name { get; set; }
-
-        public List<City> Cities { get; set; }
 
         public Continent(string name, List<City> cities)
         {
             Name = name;
-            Cities = cities;
+            foreach(var c in cities)
+            {
+                Add(c);
+            }
         }
     }
 
