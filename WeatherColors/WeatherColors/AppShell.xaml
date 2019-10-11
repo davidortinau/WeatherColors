@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
-       xmlns:views="clr-namespace:Weather.MobileCore"
+       xmlns:views="clr-namespace:WeatherColors.View"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="WeatherColors.AppShell">
+
+    <FlyoutItem Title="Continents">
+        <ShellContent ContentTemplate="{DataTemplate views:ContinentsListPage}"/>
+    </FlyoutItem>
 
     <FlyoutItem Title="Cities">
         <ShellContent ContentTemplate="{DataTemplate views:CityListPage}"/>

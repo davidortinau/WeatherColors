@@ -1,4 +1,5 @@
-﻿using MvvmHelpers;
+﻿//using MvvmHelpers;
+using AsyncAwaitBestPractices;
 using AsyncAwaitBestPractices.MVVM;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WeatherApp.Models;
 using WeatherApp.Services;
+using WeatherColors;
 using Xamarin.Forms;
 
 namespace Weather.MobileCore.ViewModel
 {
-    public class MultiWeatherViewModel : BaseViewModel
+    public class MultiWeatherViewModel : MvvmHelpers.BaseViewModel
     {
         private WeatherForecastRoot _forecast;
         private ICommand _reloadCommand;
@@ -111,7 +113,8 @@ namespace Weather.MobileCore.ViewModel
                                         name: "Asia",
                                         cities: await asCitiesTask.ConfigureAwait(false));
 
-                var weatherList = new List<Continent>
+                
+                var weatherList = new[]
                 {
                     europeWeather,
                     northAmericaWeather,
@@ -125,10 +128,9 @@ namespace Weather.MobileCore.ViewModel
                 {
                     Continents.Clear();
                     Continents.AddRange(weatherList);
-
                     SetCities(weatherList.First());
                 });
-                
+
             }
             catch (Exception ex)
             {
