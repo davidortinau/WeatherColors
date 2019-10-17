@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace WeatherApp.Models
 {
@@ -165,13 +166,17 @@ namespace WeatherApp.Models
         public Main CurrentWeather { get; set; }    
     }
     
-    public class Continent : List<City>
+    public class Continent : ObservableCollection<City>
     {
         public string Name { get; set; }
 
-        public Continent(string name, List<City> cities) : base(cities)
+        public Continent(string name, List<City> cities)
         {
             Name = name;
+            foreach(var c in cities)
+            {
+                Add(c);
+            }
         }
     }
 

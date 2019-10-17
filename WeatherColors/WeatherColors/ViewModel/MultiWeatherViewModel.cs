@@ -1,4 +1,6 @@
-﻿using MvvmHelpers;
+﻿//using MvvmHelpers;
+using AsyncAwaitBestPractices;
+using AsyncAwaitBestPractices.MVVM;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,43 +10,25 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WeatherApp.Models;
 using WeatherApp.Services;
+using WeatherColors;
 using Xamarin.Forms;
 
 namespace Weather.MobileCore.ViewModel
 {
-    public class MultiWeatherViewModel : BaseViewModel
+    public class MultiWeatherViewModel : MvvmHelpers.BaseViewModel
     {
-        private int _temp = 73;
-        private string _condition;
         private WeatherForecastRoot _forecast;
         private ICommand _reloadCommand;
         private ICommand _openFlyoutCommand;
-        private ICommand _navToOtherPage;
 
-
-        public int Temp
+        public MultiWeatherViewModel() : base()
         {
-            get { return _temp; }
-            set
-            {
-                _temp = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string Condition
-        {
-            get { return _condition; }
-            set
-            {
-                _condition = value;
-                OnPropertyChanged();
-            }
+            GetGroupedWeatherAsync().SafeFireAndForget();
         }
 
         public WeatherForecastRoot Forecast
         {
-            get { return _forecast; }
+            get => _forecast;
             set
             {
                 _forecast = value;
@@ -52,133 +36,35 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        bool useCelsius;
-        public bool UseCelsius
-        {
-            get => useCelsius;
-            set
-            {
-                if (SetProperty(ref useCelsius, value))
-                {
-                    //BackgroundColorConverter.UseCelcius = UseCelsius;
-                    OnPropertyChanged(nameof(Temp));
-                }
-            }
-        }
-
-        string location = "St. Louis";
-        public string Location
-        {
-            get => location;
-            set
-            {
-                if (SetProperty(ref location, value))
-                {
-                    _ = GetWeatherAsync();
-                }
-            }
-        }
-
-
         public ICommand ReloadCommand =>
             _reloadCommand ??
-            (_reloadCommand = new Command(async () => await GetWeatherAsync()));
+            (_reloadCommand = new AsyncCommand(GetGroupedWeatherAsync));
 
         public ICommand OpenFlyoutCommand =>
             _openFlyoutCommand ??
             (_openFlyoutCommand = new Command(() => OpenFlyout()));
 
-        public ICommand NavigateToOtherPage =>
-            _navToOtherPage ??
-            (_navToOtherPage = new Command(() => GoToOther()));
-
-        private void GoToOther()
-        {
-            Shell.Current.GoToAsync("//anything");
-        }
+        public ICommand ContinentSelectedCommand =>
+            _continentSelectedCommand ??
+            (_continentSelectedCommand = new Command<Continent>((e) => SetCities(e)));
 
         private void OpenFlyout()
         {
             Shell.Current.FlyoutIsPresented = true;
         }
 
-        ObservableCollection<City> _cities; 
-        public ObservableCollection<City> Cities
+        public ObservableRangeCollection<City> Cities { get; } = new ObservableRangeCollection<City>();
+
+        private ICommand _continentSelectedCommand;
+
+        public ObservableRangeCollection<Continent> Continents { get; } = new ObservableRangeCollection<Continent>();
+
+        private async Task<List<City>> GetWeatherForCitiesAsync(IEnumerable<string> cities)
         {
-            get { return _cities; }
-            set
-            {
-                _cities = value;
-                OnPropertyChanged();
-            }
-        }
+            var units = Units.Imperial;
+            var payload = await WeatherService.Instance.GetWeatherAsync(cities, units).ConfigureAwait(false);
 
-        List<Continent> _continents;
-        
-        public List<Continent> Continents
-        {
-            get { return _continents; }
-            set
-            {
-                _continents = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string CurrentConditionsIcon { get; set; }
-
-        public async Task GetWeatherAsync()
-        {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-            try
-            {
-                WeatherRoot weatherRoot = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                weatherRoot = await WeatherService.Instance.GetWeatherAsync(location.Trim(), units);
-                //Forecast = await WeatherService.Instance.GetForecast(weatherRoot.CityId, units);
-                var unit = useCelsius ? "C" : "F";
-                //Temp = $"{weatherRoot?.MainWeather?.Temperature ?? 0}°{unit}";
-                Temp = Convert.ToInt32(weatherRoot?.MainWeather?.Temperature);
-                Condition = $"{weatherRoot.Name}: {weatherRoot?.Weather?[0]?.Description ?? string.Empty}";
-                CurrentConditionsIcon = weatherRoot?.Weather?[0].Icon;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        public async Task GetFlatWeatherAsync(List<string> cities)
-        {
-            if (IsBusy)
-                return;
-
-            IsBusy = true;
-            try
-            {
-                CitiesWeatherRoot payload = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                payload = await WeatherService.Instance.GetWeatherAsync(cities, units); 
-
-                Cities = new ObservableCollection<City>( payload.CityList );
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+            return payload.CityList;
         }
 
         public async Task GetGroupedWeatherAsync()
@@ -187,35 +73,76 @@ namespace Weather.MobileCore.ViewModel
                 return;
 
             IsBusy = true;
+
             try
             {
-                List<string> allCities = WeatherService.NORTH_AMERICA_CITIES.Concat(WeatherService.SOUTH_AMERICA_CITIES).ToList<string>();
-                
-                Debug.WriteLine(allCities.Count());
-                
-                //await GetFlatWeatherAsync(allCities);
-                CitiesWeatherRoot payload = null;
-                var units = useCelsius ? Units.Metric : Units.Imperial;
-                payload = await WeatherService.Instance.GetWeatherAsync(allCities, units);
+                var euCitiesTask = GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES);
+                var naCitiesTask = GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES);
+                var saCitiesTask = GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES);
+                var afCitiesTask = GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES);
+                var asCitiesTask = GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES);
+                var auCitiesTask = GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES);
 
-                _cities = new ObservableCollection<City>( payload.CityList );
 
-                //_continents = new List<Continent>();
-                //_continents.Add(
-                //    new Continent(name:"North America", cities: GetCitiesIn(_cities, WeatherService.NORTH_AMERICA_CITIES))                    
-                //);
+                var getWeatherResults = await Task.WhenAll(euCitiesTask,
+                                                            naCitiesTask,
+                                                            saCitiesTask,
+                                                            afCitiesTask,
+                                                            asCitiesTask,
+                                                            auCitiesTask).ConfigureAwait(false);
 
-                //_continents.Add(
-                //    new Continent(name:"South America", cities: GetCitiesIn(_cities, WeatherService.SOUTH_AMERICA_CITIES))
-                //);
+                var europeWeather = new Continent(
+                                        name: "Europe",
+                                        cities: await euCitiesTask.ConfigureAwait(false));
+                var northAmericaWeather = new Continent(
+                                        name: "North America",
+                                        cities: await naCitiesTask.ConfigureAwait(false));
 
-                //OnPropertyChanged(nameof(Continents));
-                OnPropertyChanged(nameof(Cities));
+                var southAmericaWeather = new Continent(
+                                        name: "South America",
+                                        cities: await saCitiesTask.ConfigureAwait(false));
+
+                var africaWeather = new Continent(
+                                        name: "Africa",
+                                        cities: await afCitiesTask.ConfigureAwait(false));
+
+                var australiaWeather = new Continent(
+                                        name: "Australia",
+                                        cities: await auCitiesTask.ConfigureAwait(false));
+
+                var asiaWeather = new Continent(
+                                        name: "Asia",
+                                        cities: await asCitiesTask.ConfigureAwait(false));
+
+
+                var weatherList = new[]
+                {
+                    europeWeather,
+                    northAmericaWeather,
+                    southAmericaWeather,
+                    africaWeather,
+                    australiaWeather,
+                    asiaWeather
+                };
+
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    Continents.Clear();
+                    //Continents.Add(europeWeather);
+                    //Continents.Add(northAmericaWeather);
+                    //Continents.Add(southAmericaWeather);
+                    //Continents.Add(africaWeather);
+                    //Continents.Add(australiaWeather);
+                    //Continents.Add(asiaWeather);
+                    Continents.AddRange(weatherList);
+                    SetCities(weatherList.First());
+                    //SetCities(europeWeather);
+                });
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                //Temp = "Unable to get Weather";
             }
             finally
             {
@@ -223,9 +150,19 @@ namespace Weather.MobileCore.ViewModel
             }
         }
 
-        private List<City> GetCitiesIn(List<City> cities, List<string> cityIds)
+        private IEnumerable<City> GetCitiesIn(IEnumerable<City> cities, List<string> cityIds)
         {
-            return cities.Where(x => cityIds.Contains(x.Id.ToString())).ToList();
+            return cities.Where(x => cityIds.Contains(x.Id.ToString()));
+        }
+
+        private void SetCities(Continent e)
+        {
+            Cities.Clear();
+            Cities.AddRange(e.ToArray());
+            //foreach(var c in e.Cities)
+            //{
+            //    Cities.Add(c);
+            //}
         }
     }
 }
