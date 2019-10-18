@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel" 
              xmlns:converters="clr-namespace:Weather.MobileCore.Converters" 
              Title="Continents"
+             Shell.NavBarIsVisible="False"
              x:Class="WeatherColors.View.ContinentsListPage">
     
     <ContentPage.BindingContext>
@@ -11,11 +12,11 @@
     </ContentPage.BindingContext>
 
 
-    <!--<Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>-->
+        </Grid.RowDefinitions>
 
         <CollectionView x:Name="ContinentCV"
                         Grid.Row="1"
@@ -50,7 +51,7 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!--<ImageButton 
+        <ImageButton 
                     Source="{StaticResource IconMenu}" 
                     HorizontalOptions="Start"
                     VerticalOptions="Start"
@@ -59,5 +60,5 @@
                     Command="{Binding OpenFlyoutCommand}"/>
 
 
-    </Grid>-->
+    </Grid>
 </ContentPage>
