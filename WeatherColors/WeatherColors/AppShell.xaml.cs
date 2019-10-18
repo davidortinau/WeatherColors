@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using WeatherColors.View;
 using Xamarin.Forms;
 
 namespace WeatherColors
@@ -10,6 +10,8 @@ namespace WeatherColors
         public AppShell()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute("continent", typeof(ContinentCitiesPage));
         }
     }
 }

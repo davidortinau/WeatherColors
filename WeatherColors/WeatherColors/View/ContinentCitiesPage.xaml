@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:Weather.MobileCore.Converters"
+             xmlns:vm="clr-namespace:WeatherColors.ViewModel"
+             mc:Ignorable="d"
+             Title="{Binding Continent}"
+             x:Class="WeatherColors.View.ContinentCitiesPage">
+
+    <ContentPage.BindingContext>
+        <vm:ContinentCitiesViewModel/>
+    </ContentPage.BindingContext>
+    <Grid>
+        <CollectionView
+            Margin="15"
+            ItemsSource="{Binding Cities}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid 
+                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
+
+                        <Label 
+                            Margin="15"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333"
+                            VerticalOptions="End"
+                            HorizontalOptions="Start"
+                            Text="{Binding Name}"/>
+
+                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
+                               FontSize="44"
+                               HorizontalOptions="End"
+                               VerticalOptions="Start"
+                               Margin="15"
+                               FontAttributes="Bold"
+                               TextColor="#333333"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

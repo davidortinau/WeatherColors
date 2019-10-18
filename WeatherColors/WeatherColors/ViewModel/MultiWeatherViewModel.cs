@@ -48,6 +48,10 @@ namespace Weather.MobileCore.ViewModel
             _continentSelectedCommand ??
             (_continentSelectedCommand = new Command<Continent>((e) => SetCities(e)));
 
+        public ICommand GoToContinentCommand =>
+            _gotoContinentCommand ??
+            (_gotoContinentCommand = new Command<Continent>(async (e) => await GoToContinentAsync(e)));
+
         private void OpenFlyout()
         {
             Shell.Current.FlyoutIsPresented = true;
@@ -56,6 +60,7 @@ namespace Weather.MobileCore.ViewModel
         public ObservableRangeCollection<City> Cities { get; } = new ObservableRangeCollection<City>();
 
         private ICommand _continentSelectedCommand;
+        private ICommand _gotoContinentCommand;
 
         public ObservableRangeCollection<Continent> Continents { get; } = new ObservableRangeCollection<Continent>();
 
@@ -128,15 +133,8 @@ namespace Weather.MobileCore.ViewModel
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     Continents.Clear();
-                    //Continents.Add(europeWeather);
-                    //Continents.Add(northAmericaWeather);
-                    //Continents.Add(southAmericaWeather);
-                    //Continents.Add(africaWeather);
-                    //Continents.Add(australiaWeather);
-                    //Continents.Add(asiaWeather);
                     Continents.AddRange(weatherList);
                     SetCities(weatherList.First());
-                    //SetCities(europeWeather);
                 });
 
             }
@@ -163,6 +161,11 @@ namespace Weather.MobileCore.ViewModel
             //{
             //    Cities.Add(c);
             //}
+        }
+
+        private async Task GoToContinentAsync(Continent c)
+        {
+            await Shell.Current.GoToAsync($"continent?continent={c.Name}");
         }
     }
 }

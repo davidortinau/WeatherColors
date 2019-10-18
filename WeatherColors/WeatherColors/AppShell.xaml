@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
        xmlns:views="clr-namespace:WeatherColors.View"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="WeatherColors.AppShell">
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+       x:Class="WeatherColors.AppShell">
 
     <FlyoutItem Title="Continents">
         <ShellContent ContentTemplate="{DataTemplate views:ContinentsListPage}"/>
@@ -10,10 +11,5 @@
     <FlyoutItem Title="Cities">
         <ShellContent ContentTemplate="{DataTemplate views:CityListPage}"/>
     </FlyoutItem>
-
-    <Tab Route="anything" Title="None">
-        <ShellContent Title="One" ContentTemplate="{DataTemplate views:CityListPage}"/>
-        <ShellContent Title="Two" ContentTemplate="{DataTemplate views:CityListPage}"/>
-    </Tab>
-
+    
 </Shell>

@@ -8,7 +8,6 @@
              Shell.NavBarIsVisible="False"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
              ios:Page.UseSafeArea="True"
-             xmlns:views="clr-namespace:WeatherColors.View"
              BackgroundColor="#1d1d1d"
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
              x:Class="WeatherColors.View.CityListPage">
@@ -81,11 +80,6 @@
                           WidthRequest="30"
                           VerticalOptions="Start"
                           HorizontalOptions="Start">
-                        <!--<Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                
-                                Tapped="OnIndicatorTapped"/>
-                        </Grid.GestureRecognizers>-->
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

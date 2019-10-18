@@ -1,39 +1,63 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel" xmlns:converters="clr-namespace:Weather.MobileCore.Converters" x:Class="WeatherColors.View.ContinentsListPage">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel" 
+             xmlns:converters="clr-namespace:Weather.MobileCore.Converters" 
+             Title="Continents"
+             x:Class="WeatherColors.View.ContinentsListPage">
+    
     <ContentPage.BindingContext>
         <vm:MultiWeatherViewModel />
     </ContentPage.BindingContext>
 
-    <CollectionView x:Name="ContinentCV"
-                    IsGrouped="True"
-                    SelectionChangedCommand="{Binding ContinentSelectedCommand}"
+
+    <!--<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>-->
+
+        <CollectionView x:Name="ContinentCV"
+                        Grid.Row="1"
+                    SelectionMode="Single"
+                    SelectionChangedCommand="{Binding GoToContinentCommand}"
                     SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference ContinentCV}}"
                     ItemsSource="{Binding Continents}">
 
-        <CollectionView.ItemsLayout>
-            <LinearItemsLayout Orientation="Vertical"
-                               ItemSpacing="8"
-                               SnapPointsAlignment="Start" SnapPointsType="MandatorySingle" />
-        </CollectionView.ItemsLayout>
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"
+                                   ItemSpacing="8"
+                                   SnapPointsAlignment="Start" SnapPointsType="MandatorySingle" />
+            </CollectionView.ItemsLayout>
 
-        <CollectionView.GroupHeaderTemplate>
-            <DataTemplate>
-                <Grid WidthRequest="410" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="#d1d1d1">
-                    <Label Margin="15" FontSize="18" FontAttributes="Bold" TextColor="#333333" VerticalOptions="End" HorizontalOptions="Start" Text="{Binding Name}" />
-                </Grid>
-            </DataTemplate>
-        </CollectionView.GroupHeaderTemplate>
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Grid WidthRequest="410" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="#d1d1d1">
+                        <Label Margin="15" FontSize="18" FontAttributes="Bold" TextColor="#333333" VerticalOptions="End" HorizontalOptions="Start" Text="{Binding Name}" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <Grid BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
 
-                    <Label Margin="15" FontSize="18" FontAttributes="Bold" TextColor="#333333" VerticalOptions="End" HorizontalOptions="Start" Text="{Binding Name}" />
+                        <Label Margin="15" FontSize="18" FontAttributes="Bold" TextColor="#333333" VerticalOptions="End" HorizontalOptions="Start" Text="{Binding Name}" />
 
-                    <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}" FontSize="44" HorizontalOptions="End" VerticalOptions="Start" Margin="15" FontAttributes="Bold" TextColor="#333333" />
-                </Grid>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-    </CollectionView>
+                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}" FontSize="44" HorizontalOptions="End" VerticalOptions="Start" Margin="15" FontAttributes="Bold" TextColor="#333333" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!--<ImageButton 
+                    Source="{StaticResource IconMenu}" 
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Margin="15,25,0,0"
+                    BackgroundColor="Transparent" 
+                    Command="{Binding OpenFlyoutCommand}"/>
+
+
+    </Grid>-->
 </ContentPage>
