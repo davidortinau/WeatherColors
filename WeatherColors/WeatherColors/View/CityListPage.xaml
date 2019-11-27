@@ -33,7 +33,7 @@
         
         <CarouselView
             x:Name="CitiesCarousel"
-            PositionChanged="OnPositionChanged"
+            Margin="30,0,60,0"
             ItemsSource="{Binding Cities}"
                     Grid.Row="1">
             <CarouselView.ItemTemplate>
@@ -62,48 +62,28 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <CollectionView x:Name="IndicatorView"
-                        Grid.Row="2"
-                        Margin="0,5"
-                        HorizontalOptions="Center"
-                        SelectionMode="Single"
-                        SelectionChanged="IndicatorSelectionChanged"
-                        ItemsSource="{Binding Cities}">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Horizontal"
-                                   ItemSpacing="8"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
+        <IndicatorView Grid.Row="2"
+                       Margin="0,5"
+                       SelectedIndicatorColor="Red"
+                       IndicatorColor="White"
+                       IndicatorView.ItemsSourceBy="CitiesCarousel"
+                        HorizontalOptions="Center">
+            <IndicatorView.IndicatorTemplate>
                 <DataTemplate>
-                    <Grid BackgroundColor="White"
-                          HeightRequest="10"
-                          WidthRequest="30"
-                          VerticalOptions="Start"
-                          HorizontalOptions="Start">
-                    </Grid>
+                    <BoxView HeightRequest="10" WidthRequest="40"
+                             
+                             />
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-            <CollectionView.Resources>
-                <Style TargetType="Grid">
-                    <Setter Property="VisualStateManager.VisualStateGroups">
-                        <VisualStateGroupList>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor"
-                                                Value="LightSkyBlue" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateGroupList>
-                    </Setter>
-                </Style>
-            </CollectionView.Resources>
-        </CollectionView>
+            </IndicatorView.IndicatorTemplate>
+            
+        </IndicatorView>
+
+
+
 
         <CollectionView 
                     Grid.Row="3"
+            Margin="30,0"
                     SelectionMode="Single"
                     x:Name="ContinentCV"
                     SelectionChangedCommand="{Binding ContinentSelectedCommand}"

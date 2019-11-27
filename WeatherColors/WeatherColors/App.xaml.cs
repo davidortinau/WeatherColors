@@ -11,6 +11,8 @@ namespace WeatherColors
         {
             InitializeComponent();
 
+            Device.SetFlags(new[] { "IndicatorView_Experimental" });
+
             MainPage = new AppShell();
         }
 

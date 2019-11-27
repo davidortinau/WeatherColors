@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel" 
              xmlns:converters="clr-namespace:Weather.MobileCore.Converters" 
              Title="Continents"
+             BackgroundColor="#1d1d1d"
              Shell.NavBarIsVisible="False"
              x:Class="WeatherColors.View.ContinentsListPage">
     
@@ -19,6 +20,7 @@
         </Grid.RowDefinitions>
 
         <CollectionView x:Name="ContinentCV"
+                        IsGrouped="False"
                         Grid.Row="1"
                     SelectionMode="Single"
                     SelectionChangedCommand="{Binding GoToContinentCommand}"
