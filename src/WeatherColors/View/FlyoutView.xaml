@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+      xmlns:xappy="clr-namespace:Xappy"
+      xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+      x:Class="WeatherColors.View.FlyoutHeaderView"
+      ColumnDefinitions="9*,*">
+
+    <!--<Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*9"/>
+        <ColumnDefinition Width="*1"/>
+    </Grid.ColumnDefinitions>-->
+
+    <Grid.RowDefinitions>
+        <RowDefinition Height="60"/>
+    </Grid.RowDefinitions>
+
+    <Entry Text="{Binding City}" Grid.Column="0" VerticalOptions="Center"/>
+    <ImageButton BackgroundColor="Transparent"
+                 Grid.Column="1"
+                 VerticalOptions="Center"
+           Command="{Binding AddCityCommand}"
+                 >
+        <ImageButton.Source>
+            <FontImageSource
+                FontFamily="{StaticResource FontAwesome}"
+                Glyph="{x:Static xappy:IconFont.PlusSquare}"
+                Color="White"
+                Size="24"/>
+        </ImageButton.Source>
+    </ImageButton>
+
+</Grid>

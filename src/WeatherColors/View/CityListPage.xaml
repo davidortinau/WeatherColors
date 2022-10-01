@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:Weather.MobileCore.Converters"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#1d1d1d"
+             xmlns:vm="clr-namespace:Weather.MobileCore.ViewModel"
+             x:Class="WeatherColors.View.CityListPage">
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="cityTemplate">
+            <Grid ColumnDefinitions="50,10,*" HeightRequest="50">
+                <Label Background="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}"
+                       Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
+                       HeightRequest="50"
+                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                       />
+                <Label Grid.Column="2" TextColor="White" FontSize="34">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Name} "/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </Grid>
+
+        </DataTemplate>
+
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <vm:MultiWeatherViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="80,*,20,100">
+
+        <Label Text="World Cities"
+               FontSize="24"
+               TextColor="#f1f1f1"
+               Margin="20"
+               HorizontalOptions="Center"
+               />
+
+        <CollectionView ItemTemplate="{StaticResource cityTemplate}" Grid.Row="1"
+                        ItemsSource="{Binding Cities}"/>
+
+        <!--<ListView ItemsSource="{Binding Cities}" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid ColumnDefinitions="50,10,*">
+                            <BoxView Color="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}"/>
+                            <Label Grid.Column="2">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Name} "/>
+                                        <Span Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"/>
+                                    </FormattedString>
+
+                                </Label.FormattedText>
+                                </Label>
+                        </Grid>
+
+                    </ViewCell>
+
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+
+        </ListView>-->
+        
+        <!--<CarouselView
+            x:Name="CitiesCarousel"
+            IndicatorView="indicators"
+            Margin="30,0,60,0"
+            ItemsSource="{Binding Cities}"
+                    Grid.Row="1">
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid 
+                        BackgroundColor="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}">
+
+                        <Label 
+                            Margin="15"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333"
+                            VerticalOptions="End"
+                            HorizontalOptions="Start"
+                            Text="{Binding Name}"/>
+
+                        <Label Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"
+                               FontSize="44"
+                               HorizontalOptions="End"
+                               VerticalOptions="Start"
+                               Margin="15"
+                               FontAttributes="Bold"
+                               TextColor="#333333"/>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>-->
+
+        <!--<IndicatorView Grid.Row="2"
+                       Margin="0,5"
+                       SelectedIndicatorColor="Red"
+                       IndicatorColor="White"
+                       x:Name="indicators"
+                        HorizontalOptions="Center">
+            <IndicatorView.IndicatorTemplate>
+                <DataTemplate>
+                    <BoxView HeightRequest="10" WidthRequest="40"
+                             
+                             />
+                </DataTemplate>
+            </IndicatorView.IndicatorTemplate>
+            
+        </IndicatorView>-->
+
+
+
+
+        <CollectionView 
+                    Grid.Row="3"
+            Margin="30,0"
+                    SelectionMode="Single"
+                    x:Name="ContinentCV"
+                    SelectionChangedCommand="{Binding ContinentSelectedCommand}"
+                    SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference ContinentCV}}"
+                    ItemsSource="{Binding Continents}">
+            <CollectionView.Resources>
+                <Style TargetType="Grid">
+                    <Setter Property="VisualStateManager.VisualStateGroups">
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor"
+                                                Value="LightSkyBlue" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter>
+                </Style>
+            </CollectionView.Resources>
+
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8" 
+                                   SnapPointsAlignment="Start" 
+                                   SnapPointsType="MandatorySingle"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid WidthRequest="410"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        BackgroundColor="#d1d1d1">
+                        <Label 
+                            Margin="15"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            TextColor="#333333"
+                            VerticalOptions="End"
+                            HorizontalOptions="Start"
+                            Text="{Binding Name}"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <ImageButton 
+                    Source="{StaticResource IconMenu}" 
+                    HorizontalOptions="Start"
+                    VerticalOptions="Start"
+                    Margin="15,25,0,0"
+                    BackgroundColor="Transparent" 
+                    Command="{Binding OpenFlyoutCommand}"/>
+
+
+    </Grid>
+
+</ContentPage>
