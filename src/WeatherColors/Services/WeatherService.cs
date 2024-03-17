@@ -144,10 +144,18 @@ namespace WeatherApp.Services
 
         public async Task<CitiesWeatherRoot> GetWeatherAsync(IEnumerable<string> cities, Units units = Units.Imperial)
         {
+            string json = string.Empty;
+
             using (var client = new HttpClient())
             {
                 var url = string.Format(WeatherCitiesUri, string.Join(",",cities), units.ToString().ToLower());
-                var json = await client.GetStringAsync(url).ConfigureAwait(false);
+                try
+                {
+                    json = await client.GetStringAsync(url);
+                }catch(Exception ex)
+                {
+                    Debug.WriteLine($"{ex.Message}");
+                }
 
                 if (string.IsNullOrWhiteSpace(json))
                     return null;

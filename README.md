@@ -1,3 +1,8 @@
 # WeatherColors
 
-Sample showing `CarouselView` and `CollectionView` in Xamarin.Forms 4.3
+Upgraded from Xamarin.Forms 4.3 to .NET MAUI 8.0.10.
+
+Sample showing `CarouselView` and `CollectionView`
+
+![Android and iOS screenshots](images/maui-weathersample.png)
+
