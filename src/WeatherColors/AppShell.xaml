@@ -6,9 +6,11 @@
     xmlns:views="clr-namespace:WeatherColors.View"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate views:CityListPage}"
-        Route="MainPage" />
+    <FlyoutItem Title="Cities">
+        <ShellContent ContentTemplate="{DataTemplate views:CityListPage}"/>
+    </FlyoutItem>
 
+    <FlyoutItem Title="Continents">
+        <ShellContent ContentTemplate="{DataTemplate views:ContinentsListPage}"/>
+    </FlyoutItem>
 </Shell>

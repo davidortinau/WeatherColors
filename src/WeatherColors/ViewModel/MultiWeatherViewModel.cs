@@ -80,12 +80,12 @@ namespace Weather.MobileCore.ViewModel
 
             try
             {
-                var euCitiesTask = GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES);
-                var naCitiesTask = GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES);
-                var saCitiesTask = GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES);
-                var afCitiesTask = GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES);
-                var asCitiesTask = GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES);
-                var auCitiesTask = GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES);
+                var euCitiesTask = GetWeatherForCitiesAsync(WeatherService.EUROPE_CITIES.Take(20));
+                var naCitiesTask = GetWeatherForCitiesAsync(WeatherService.NORTH_AMERICA_CITIES.Take(20));
+                var saCitiesTask = GetWeatherForCitiesAsync(WeatherService.SOUTH_AMERICA_CITIES.Take(20));
+                var afCitiesTask = GetWeatherForCitiesAsync(WeatherService.AFRICA_CITIES.Take(20));
+                var asCitiesTask = GetWeatherForCitiesAsync(WeatherService.ASIA_CITIES.Take(20));
+                var auCitiesTask = GetWeatherForCitiesAsync(WeatherService.AUSTRALIA_CITIES.Take(20));
 
 
                 var getWeatherResults = await Task.WhenAll(euCitiesTask,

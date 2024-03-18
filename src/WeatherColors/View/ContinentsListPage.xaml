@@ -13,14 +13,10 @@
     </ContentPage.BindingContext>
 
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <Grid RowDefinitions="80,*" Margin="10">
 
         <CollectionView x:Name="ContinentCV"
-                        IsGrouped="False"
+                        IsGrouped="True"
                         Grid.Row="1"
                     SelectionMode="Single"
                     SelectionChangedCommand="{Binding GoToContinentCommand}"
@@ -29,14 +25,20 @@
 
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Vertical"
-                                   ItemSpacing="8"
-                                   SnapPointsAlignment="Start" SnapPointsType="MandatorySingle" />
+                                   ItemSpacing="8" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate>
-                    <Grid WidthRequest="410" HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="#d1d1d1">
-                        <Label Margin="15" FontSize="18" FontAttributes="Bold" TextColor="#333333" VerticalOptions="End" HorizontalOptions="Start" Text="{Binding Name}" />
+                    <Grid RowDefinitions="16,Auto,16" WidthRequest="410" HorizontalOptions="Fill" VerticalOptions="Fill" >
+                        <Label
+                            Grid.Row="1"
+                            FontSize="32" FontAttributes="Bold" TextColor="#FFFFFF"
+                               Padding="8"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Fill" HorizontalOptions="Fill"
+                               VerticalTextAlignment="Center"
+                               Text="{Binding Name}" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>

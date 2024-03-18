@@ -42,32 +42,18 @@
                />
 
         <CollectionView ItemTemplate="{StaticResource cityTemplate}" Grid.Row="1"
-                        ItemsSource="{Binding Cities}"/>
+                        ItemsSource="{Binding Cities}"
+                        Margin="10">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Span="2"
+                                 Orientation="Vertical"
+                                 HorizontalItemSpacing="10" VerticalItemSpacing="10"
+                                 />
 
-        <!--<ListView ItemsSource="{Binding Cities}" Grid.Row="1">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <Grid ColumnDefinitions="50,10,*">
-                            <BoxView Color="{Binding CurrentWeather.Temp, Converter={converters:TempToColorConverter}}"/>
-                            <Label Grid.Column="2">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding Name} "/>
-                                        <Span Text="{Binding CurrentWeather.Temp, StringFormat='{0:D}°'}"/>
-                                    </FormattedString>
+            </CollectionView.ItemsLayout>
+        </CollectionView>
 
-                                </Label.FormattedText>
-                                </Label>
-                        </Grid>
-
-                    </ViewCell>
-
-                </DataTemplate>
-
-            </ListView.ItemTemplate>
-
-        </ListView>-->
+        
         
         <!--<CarouselView
             x:Name="CitiesCarousel"
